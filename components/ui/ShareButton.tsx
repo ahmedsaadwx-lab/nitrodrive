@@ -1,0 +1,6 @@
+'use client';
+import { Check, Copy, Share2 } from 'lucide-react';
+import { trackEvent } from '@/lib/analytics';
+import { useEffect, useState } from 'react';
+async function copyLink(url: string) { if (navigator.clipboard) { await navigator.clipboard.writeText(url); return; } const input = document.createElement('textarea'); input.value = url; input.setAttribute('readonly', ''); input.style.position = 'fixed'; input.style.opacity = '0'; document.body.appendChild(input); input.select(); document.execCommand('copy'); input.remove(); }
+export default function ShareButton({title}:{title:string}){const [copied,setCopied]=useState(false); const [canShare,setCanShare]=useState(false); useEffect(() => setCanShare(typeof navigator !== 'undefined' && typeof navigator.share === 'function'), []); async function share(){const url=window.location.href; try {if(canShare) await navigator.share({title,url}); else { await copyLink(url); setCopied(true); window.setTimeout(() => setCopied(false), 1800); } trackEvent('game_shared',{title});} catch { /* User cancelled native share. */ }} return <button className="share-button icon-btn" onClick={share} aria-label={copied ? 'Link copied' : 'Share game'}>{copied ? <><Check size={16}/><span className="share-confirmation">Link copied!</span></> : canShare ? <Share2 size={17}/> : <Copy size={17}/>}</button>}

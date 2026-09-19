@@ -1,0 +1,2 @@
+import Link from 'next/link';
+export default function NotFound(){return <div className="container" style={{padding:'130px 0',textAlign:'center'}}><div className="eyebrow">404 / Wrong turn</div><h1 style={{fontSize:80,margin:'12px 0'}}>Game not found</h1><p className="muted">Looks like this race took a wrong turn.</p><Link className="btn btn-primary" href="/games" style={{marginTop:24}}>Back to games</Link></div>}
