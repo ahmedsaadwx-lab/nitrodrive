@@ -29,18 +29,18 @@ export default function Home() {
   return (
     <>
       <section className="hero hero-phase-two">
+        <Image className="hero-artwork" src={lead.thumbnail} alt="" fill priority sizes="(max-width: 700px) 100vw, 62vw" />
         <div className="hero-grid-lines" aria-hidden="true" />
         <div className="container hero-content">
-          <div className="eyebrow">NitroDrive / Phase 02</div>
+          <div className="eyebrow">Featured run / {lead.category}</div>
           <h1>Race into<br /><span>the action</span></h1>
-          <p>Play powerful racing and stunt games directly in your browser.</p>
+          <p>Play powerful racing, drifting and stunt games directly in your browser.</p>
           <div className="hero-actions">
             <a className="btn btn-primary" href="#featured-games"><ArrowDown size={15} /> Play now</a>
             <a className="btn btn-secondary" href="#choose-your-ride">Explore games <ArrowUpRight size={15} /></a>
           </div>
-          <div className="hero-note"><span /> Four handpicked driving experiences</div>
+          <div className="hero-note"><span /> {featuredGames.length} handpicked driving experiences</div>
         </div>
-        <div className="hero-car" aria-hidden="true"><div className="car-body"><div className="wheel one" /><div className="wheel two" /></div></div>
       </section>
 
       <main>
