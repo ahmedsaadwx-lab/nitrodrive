@@ -1,3 +1,4 @@
+import type { Metadata } from 'next';
 import Link from 'next/link';
 import Image from 'next/image';
 import { ArrowDown, ArrowUpRight, CarFront, Flag, Play, Sparkles } from 'lucide-react';
@@ -11,6 +12,17 @@ import RecommendationRail from '@/components/profile/RecommendationRail';
 import AdContainer from '@/components/ui/AdContainer';
 import ArticleCard from '@/components/blog/ArticleCard';
 import { articles } from '@/data/articles';
+
+const homeTitle = 'NitroDrive | Free Online Racing & Car Games';
+const homeDescription = 'Play free racing, stunt and 3D driving games in your browser. Browse handpicked car games, from arcade racers to 3D simulators, on NitroDrive.';
+
+export const metadata: Metadata = {
+  title: { absolute: homeTitle },
+  description: homeDescription,
+  alternates: { canonical: '/' },
+  openGraph: { type: 'website', url: '/', siteName: 'NitroDrive', locale: 'en_US', title: homeTitle, description: homeDescription },
+  twitter: { card: 'summary_large_image', title: homeTitle, description: homeDescription }
+};
 
 const rides = [
   { label: 'Racing', href: '/category/racing', icon: Flag, games: libraryGames.filter(game => game.tags.includes('racing')), description: 'High-speed city trials and arena runs.' },

@@ -10,6 +10,7 @@ import ShareButton from '@/components/ui/ShareButton';
 import RecommendationRail from '@/components/profile/RecommendationRail';
 import Breadcrumbs from '@/components/ui/Breadcrumbs';
 import GameBottomAd from '@/components/ads/GameBottomAd';
+import { SITE_NAME, absoluteUrl } from '@/lib/seo';
 
 export function generateStaticParams() {
   return games.map(game => ({ slug: game.slug }));
@@ -17,13 +18,18 @@ export function generateStaticParams() {
 
 export async function generateMetadata({ params }: { params: Promise<{ slug: string }> }): Promise<Metadata> {
   const game = getGame((await params).slug);
-  if (!game) return {};
+  if (!game) return { title: 'Game not found', robots: { index: false, follow: false } };
+  const path = `/games/${game.slug}`;
+  const socialTitle = `${game.title} | ${SITE_NAME}`;
+  const images = [{ url: game.thumbnail, alt: `${game.title} cover` }];
   return {
-    title: `${game.title} - Play Racing Game | NitroDrive`,
+    // The root layout title template appends "| NitroDrive".
+    title: `${game.title} - ${game.category} Game Online`,
     description: game.description,
-    alternates: { canonical: `/games/${game.slug}` },
-    openGraph: { title: `${game.title} | NitroDrive`, description: game.description, images: [game.thumbnail], type: 'website' },
-    twitter: { card: 'summary_large_image', title: `${game.title} | NitroDrive`, description: game.description, images: [game.thumbnail] }
+    alternates: { canonical: path },
+    robots: game.status === 'unavailable' ? { index: false, follow: true } : { index: true, follow: true },
+    openGraph: { type: 'website', url: path, siteName: SITE_NAME, locale: 'en_US', title: socialTitle, description: game.description, images },
+    twitter: { card: 'summary_large_image', title: socialTitle, description: game.description, images: [game.thumbnail] }
   };
 }
 
@@ -35,11 +41,11 @@ export default async function GamePage({ params }: { params: Promise<{ slug: str
   const isExternal = game.gameType === 'external';
   const sourceName = game.developer || (isExternal ? 'External project' : 'NitroDrive');
   const categoryHref = categories.includes(game.category) ? `/category/${game.category.toLowerCase().replaceAll(' ', '-')}` : '/category/racing';
-  const jsonLd = { '@context': 'https://schema.org', '@type': 'VideoGame', name: game.title, description: game.description, genre: game.category, image: game.thumbnail, url: `https://nitrodrive.example/games/${game.slug}` };
+  const jsonLd = { '@context': 'https://schema.org', '@type': 'VideoGame', name: game.title, description: game.description, genre: game.category, keywords: game.tags.join(', '), image: absoluteUrl(game.thumbnail), url: absoluteUrl(`/games/${game.slug}`) };
 
   return (
     <div className="container game-page">
-      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }} />
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd).replace(/</g, '\\u003c') }} />
       <Breadcrumbs items={[{ label: 'Games', href: '/games' }, { label: game.category, href: categoryHref }, { label: game.title }]} />
       <div className="game-page-heading"><div><Link className="eyebrow game-category-link" href={categoryHref}>{game.category}</Link><h1>{game.title}</h1></div><div className="game-page-actions"><FavoriteButton gameId={game.id} /><ShareButton title={game.title} /></div></div>
       <div className="player-layout">
