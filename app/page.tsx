@@ -2,7 +2,7 @@ import type { Metadata } from 'next';
 import Link from 'next/link';
 import Image from 'next/image';
 import { ArrowDown, ArrowUpRight, CarFront, Flag, Play, Sparkles } from 'lucide-react';
-import { libraryGames, pokiGames } from '@/data/games';
+import { games as allGames, libraryGames } from '@/data/games';
 import GameCard from '@/components/games/GameCard';
 import GameRail from '@/components/home/GameRail';
 import RecentlyPlayed from '@/components/home/RecentlyPlayed';
@@ -31,8 +31,8 @@ const rides = [
 ];
 
 export default function Home() {
-  const featuredGames = pokiGames;
-  const lead = featuredGames.find(game => game.id === '3d-car-simulator') || featuredGames[0];
+  const featuredGames = allGames.filter(game => game.gameType === 'local');
+  const lead = featuredGames.find(game => game.id === 'neon-highway') || featuredGames[0];
   if (!lead) return null;
   const trendingGames = libraryGames.filter(game => game.trending);
   const racingGames = libraryGames.filter(game => game.tags.includes('racing'));
